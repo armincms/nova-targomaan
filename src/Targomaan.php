@@ -41,6 +41,20 @@ class Targomaan extends MergeValue
     }
 
     /**
+     * Handle magic property.
+     * 
+     * @param  mixed $key 
+     * @param  array $value   
+     * @return          
+     */
+    public function __set($key, $value)
+    {
+        collect($this->data)->each(function($field) use ($key, $value) {
+            $field->{$key} = $value;
+        }); 
+    }
+
+    /**
      * Handle magic method.
      * 
      * @param  mixed $method 
