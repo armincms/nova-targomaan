@@ -64,7 +64,7 @@ class Targomaan extends MergeValue
     public function __call($method, $args)
     {
         collect($this->data)->each(function($field) use ($method, $args) {
-            call_user_func_array([$field, $method], $args);
+            is_callable([$field, $method]) && call_user_func_array([$field, $method], $args);
         });
 
         return $this;
