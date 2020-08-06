@@ -128,9 +128,13 @@ class TargomaanField extends FieldElement implements JsonSerializable, Resolvabl
     public function prepareTranslationField($field, $locale, $language)
     { 
 		return tap(clone $field, function($field) use ($locale, $language) { 
-            $field->name = $field->name.(count(static::locales()) > 1 ? "({$language})" : '');
-			$field->attribute = $field->attribute.static::delimiter().$locale;
-			$field->hideFromIndex(app()->getLocale() !== $locale);
+            if(app()->getLocale() !== $locale) { 
+                // ensures that first model create correctly
+                $field->name = $field->name.(count(static::locales()) > 1 ? "({$language})" : '');
+                $field->attribute = $field->attribute.static::delimiter().$locale;
+                $field->hideFromIndex();
+            }
+
             $field->withMeta([
                 'locale' => $locale,
                 'validationKey' => $field->attribute,
