@@ -280,7 +280,25 @@ class TargomaanField extends FieldElement implements JsonSerializable, Resolvabl
             'delimiter' => static::delimiter(),
             'textAlign' => 'center'
         ]);
-    }   
+    }  
+
+    /**
+     * Hydrate the given attribute on the model based on the incoming request.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  object  $model
+     * @return mixed
+     */
+    public function fill(NovaRequest $request, $model)
+    {
+        $callbacks = $this->fields->map->fill($request, $model)->filter(function($callback) {
+            return is_callable($callback);
+        });
+
+        return function() use ($callbacks) {
+            $callbacks->each->__invoke(); 
+        };
+    } 
 
     /**
      * Handle magic method.
