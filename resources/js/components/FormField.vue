@@ -29,10 +29,12 @@
 </template>
 
 <script> 
+import HandleActiveLocale from './HandleActiveLocale.vue'
+import HandleToolbar from './HandleToolbar.vue'
 import { FormField } from 'laravel-nova'
 
 export default { 
-    mixins: [FormField],
+    mixins: [FormField, HandleActiveLocale, HandleToolbar],
     
     props: {   
         errors: {
@@ -60,19 +62,7 @@ export default {
         viaRelationship: {
           type: String,
         },
-    }, 
-
-    data() {
-        return {
-            activeLocale: {
-                type: String,
-            }
-        }
-    },
-
-    mounted() {
-        this.activeLocale = this.field.active; 
-    },
+    },  
 
     methods: {
         /*
@@ -95,21 +85,6 @@ export default {
          */
         handleChange(value) { 
         }, 
-
-        /**
-         * Set the active locale.
-         */
-        setActiveLocale(locale) {
-            this.activeLocale = locale
-
-            this.$emit('targomaan.locale', locale)
-        }
-    },
-
-    computed: {
-        showToolbar: function() { 
-            return this.field.showToolbar && _.keys(this.field.locales).length > 1;
-        }
     },
 
     watch: {  
@@ -120,11 +95,7 @@ export default {
             ) 
 
             this.setActiveLocale(errorLocale ? errorLocale : this.activeLocale) 
-        },
-
-        'targomaan.locale': function(locale) {
-            this.activeLocale === locale || this.setActiveLocale(locale)
-        }
+        }, 
     }
 }
 </script>

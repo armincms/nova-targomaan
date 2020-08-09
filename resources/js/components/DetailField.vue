@@ -23,42 +23,11 @@
 </template>
 
 <script>
+import HandleActiveLocale from './HandleActiveLocale.vue'
+import HandleToolbar from './HandleToolbar.vue'
+
 export default {
-    props: ['resource', 'resourceName', 'resourceId', 'field'],
-
-    data() {
-        return {
-            activeLocale: {
-                type: String,
-            }
-        }
-    },
-
-    mounted() {
-        this.activeLocale = this.field.active; 
-    },
-
-    methods: { 
-        /**
-         * Set the active locale.
-         */
-        setActiveLocale(locale) {
-            this.activeLocale = locale
-
-            this.$emit('targomaan.locale', locale)
-        }
-    },
-
-    computed: {
-        showToolbar: function() { 
-            return this.field.showToolbar && _.keys(this.field.locales).length > 1;
-        }
-    },
-
-    watch: {   
-        'targomaan.locale': function(locale) {
-            this.activeLocale === locale || this.setActiveLocale(locale)
-        }
-    }
+    mixins: [HandleActiveLocale, HandleToolbar],
+    props: ['resource', 'resourceName', 'resourceId', 'field'],     
 }
 </script>
