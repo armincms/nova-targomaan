@@ -149,7 +149,7 @@ class TargomaanField extends FieldElement implements JsonSerializable, Resolvabl
      */
     public static function locales() : array
     {
-    	return static::$locales ?: [app()->getLocale() => app()->getLocale(), 'En' => 'English'];
+    	return static::$locales ?: [app()->getLocale() => app()->getLocale()];
     }
 
     /**
