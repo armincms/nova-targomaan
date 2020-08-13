@@ -261,7 +261,73 @@ class TargomaanField extends FieldElement implements JsonSerializable, Resolvabl
         return $this->fields->every(function($field) use ($request) {
             return $field->isRequired($request);
         });
-    }  
+    } 
+
+    /**
+     * Check for showing when action.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  string $method
+     * @param  mixed  $resource
+     * @return this
+     */
+    protected function applyShownOn(NovaRequest $request, $method, $resource = null)
+    {  
+        return tap(parent::{$method}($request, $method), function($apply) use ($request, $resource, $method) {
+            if($apply) {
+                $this->fields = $this->fields->filter(function($field) use ($request, $resource, $method) {
+                    return $field->{$method}($request, $resource);
+                })->values(); 
+            }
+        });
+    }
+     
+    /**
+     * Check for showing when updating.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  mixed  $resource
+     * @return bool
+     */
+    public function isShownOnUpdate(NovaRequest $request, $resource): bool
+    {
+        return $this->applyShownOn($request, __FUNCTION__, $resource);
+    }
+    
+    /**
+     * Check showing on index.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  mixed  $resource
+     * @return bool
+     */
+    public function isShownOnIndex(NovaRequest $request, $resource): bool
+    {  
+        return $this->applyShownOn($request, __FUNCTION__, $resource);
+    }
+    
+    /**
+     * Check showing on detail.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  mixed  $resource
+     * @return bool
+     */
+    public function isShownOnDetail(NovaRequest $request, $resource): bool
+    {
+        return $this->applyShownOn($request, __FUNCTION__, $resource);
+    }
+    
+    /**
+     * Check for showing when creating.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @return bool
+     */
+    public function isShownOnCreation(NovaRequest $request): bool
+    { 
+        return $this->applyShownOn($request, __FUNCTION__);
+    }
 
     /**
      * Prepare the panel for JSON serialization.
