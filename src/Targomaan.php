@@ -17,6 +17,16 @@ class Targomaan extends MergeValue
     {   
         parent::__construct($this->prepareFields(app(NovaRequest::class), $fields));
     }  
+    
+    /**
+     * Create a new element.
+     *
+     * @return static
+     */
+    public static function make(...$arguments)
+    {
+        return new static(...$arguments);
+    }
 
     /**
      * Prepare the given fields.
