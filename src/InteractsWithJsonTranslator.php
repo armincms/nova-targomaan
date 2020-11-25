@@ -27,6 +27,6 @@ trait InteractsWithJsonTranslator
      */
     public static function locales($column) : array
     {
-        return Targomaan::locales($column);
+        return TargomaanField::locales($column);
     }
 }
