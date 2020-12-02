@@ -3,6 +3,7 @@
 namespace Armincms\Fields;
 
 use JsonSerializable;
+use Illuminate\Support\Str;
 use Illuminate\Http\Resources\MergeValue;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Contracts\Resolvable;
@@ -138,6 +139,10 @@ class TargomaanField extends FieldElement implements JsonSerializable, Resolvabl
             $field->withMeta([
                 'locale' => $locale,
                 'validationKey' => $field->attribute,
+                'id'    => Str::slug($this->attribute),
+                'extraAttributes' => [
+                    'id' => Str::slug($this->attribute),
+                ] 
             ]); 
 		});  
     }
