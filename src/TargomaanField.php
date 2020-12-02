@@ -139,9 +139,9 @@ class TargomaanField extends FieldElement implements JsonSerializable, Resolvabl
             $field->withMeta([
                 'locale' => $locale,
                 'validationKey' => $field->attribute,
-                'id'    => Str::slug($this->attribute),
+                'id'    => Str::slug($field->attribute),
                 'extraAttributes' => [
-                    'id' => Str::slug($this->attribute),
+                    'id' => Str::slug($field->attribute),
                 ] 
             ]); 
 		});  
