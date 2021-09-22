@@ -5,7 +5,7 @@
         "laravel",
         "nova"
     ],
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": ">=7.1.0",
         "armincms/targomaan": "~0.1"
