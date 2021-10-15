@@ -2,8 +2,10 @@
 
 namespace Armincms\Fields;
 
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Downloadable; 
 use Laravel\Nova\Fields\Field; 
+use Laravel\Nova\Fields\FieldCollection; 
 use Laravel\Nova\Http\Requests\NovaRequest; 
 
 class Targomaan extends Field implements Downloadable
@@ -139,7 +141,7 @@ class Targomaan extends Field implements Downloadable
      */
     protected function fields()
     {  
-        return collect($this->fields);
+        return FieldCollection::make($this->fields);
     }
 
     /**
@@ -236,6 +238,19 @@ class Targomaan extends Field implements Downloadable
                              ->all();
 
         return $this->fields()->isNotEmpty();
+    }
+
+    /**
+     * Determine if the element should be displayed for the given request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    public function authorize(Request $request)
+    { 
+        $this->fields = $this->fields()->authorized($request)->all();
+
+        return $this;
     }
 
     /**
