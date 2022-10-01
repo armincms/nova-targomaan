@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\FieldCollection;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use PhpParser\ErrorHandler\Collecting;
 
 class Targomaan extends Field
 {
@@ -19,14 +18,14 @@ class Targomaan extends Field
 
     /**
      * List of the fields.
-     * 
+     *
      * @var array
      */
     protected $fields = [];
 
     /**
      * The attribute locale delimiter.
-     * 
+     *
      * @var string
      */
     protected $delimiter = '::';
@@ -40,7 +39,7 @@ class Targomaan extends Field
 
     /**
      * Create a new merge-value instance.
-     * 
+     *
      * @param  \Closure|array  $fields
      * @return void
      */
@@ -56,7 +55,7 @@ class Targomaan extends Field
 
     /**
      * Get the specific attribute for the targomaan field.
-     * 
+     *
      * @return string
      */
     private function getAttribute()
@@ -66,21 +65,21 @@ class Targomaan extends Field
 
     /**
      * Determin if should display locale toolabr.
-     * 
+     *
      * @return string
      */
     private function displayLocales(bool $display = true)
     {
         return $this->withMeta([
-            'displayLocales' => $display
+            'displayLocales' => $display,
         ]);
     }
 
     /**
      * Set the disaplyable locales.
-     * 
-     * @param  array  $locales 
-     * @return $this          
+     *
+     * @param  array  $locales
+     * @return $this
      */
     public function withActiveLocale(string $activeLocale)
     {
@@ -89,9 +88,9 @@ class Targomaan extends Field
 
     /**
      * Set the fields.
-     * 
-     * @param  array  $fields 
-     * @return $this          
+     *
+     * @param  array  $fields
+     * @return $this
      */
     public function withFields(array $fields)
     {
@@ -102,9 +101,9 @@ class Targomaan extends Field
 
     /**
      * Set the delimiter.
-     * 
-     * @param  string  $delimiter 
-     * @return $this          
+     *
+     * @param  string  $delimiter
+     * @return $this
      */
     public function withDelimiter(string $delimiter)
     {
@@ -115,9 +114,9 @@ class Targomaan extends Field
 
     /**
      * Set the disaplyable locales.
-     * 
-     * @param  array  $locales 
-     * @return $this          
+     *
+     * @param  array  $locales
+     * @return $this
      */
     protected function withLocales(array $locales)
     {
@@ -126,7 +125,7 @@ class Targomaan extends Field
 
     /**
      * Get the available locales.
-     * 
+     *
      * @return array
      */
     protected function availableLocales()
@@ -136,7 +135,7 @@ class Targomaan extends Field
 
     /**
      * Get the available fields.
-     * 
+     *
      * @return array
      */
     protected function fields()
@@ -146,9 +145,9 @@ class Targomaan extends Field
 
     /**
      * Preapre transaltion fields.
-     * 
+     *
      * @param  array  $fields
-     * @return array        
+     * @return array
      */
     protected function prepareFields(array $fields)
     {
@@ -164,7 +163,7 @@ class Targomaan extends Field
     /**
      * Find a given field by its attribute.
      *
-     * @param  string  $attribute 
+     * @param  string  $attribute
      * @return \Laravel\Nova\Fields\Field|null
      */
     public function findFieldByAttribute($attribute)
@@ -176,15 +175,15 @@ class Targomaan extends Field
 
     /**
      * Create new fiwld for the given locale.
-     * 
-     * @param  \Laravel\Nova\Fields\Field $field  
-     * @param  string $locale 
-     * @return \Laravel\Nova\Fields\Field         
+     *
+     * @param  \Laravel\Nova\Fields\Field  $field
+     * @param  string  $locale
+     * @return \Laravel\Nova\Fields\Field
      */
     protected function cloneFieldForLocale($field, $locale)
     {
         $field = clone $field;
-        $field->attribute = $field->attribute . $this->delimiter . $locale;
+        $field->attribute = $field->attribute.$this->delimiter.$locale;
         $field->withMeta(compact('locale'));
 
         return $field;
