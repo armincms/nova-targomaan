@@ -1,39 +1,41 @@
-<script> 
-export default {   
+<script>
+export default {
   data() {
     return {
       activeLocale: {
         type: String,
-      }
-    }
+      },
+    };
   },
 
   mounted() {
-    this.handleActiveLocale(this.field.activeLocale)
+    this.setActiveLocale(this.field.activeLocale);
 
-    Nova.$on('targomaan.locale', (locale) => {
-      this.handleChangeLocale(locale) 
-    })
+    Nova.$on("targomaan.locale", (locale) => {
+      this.handleChangeLocale(locale);
+    });
   },
 
   methods: {
-    handleChangeLocale: function (locale) {  
-      this.activeLocale === locale || this.setActiveLocale(locale)
+    handleChangeLocale: function(locale) {
+      if (this.activeLocale === locale) return;
+
+      this.setActiveLocale(locale);
     },
 
     handleActiveLocale(locale) {
-      this.activeLocale = locale; 
-    }, 
+      this.activeLocale = locale;
+    },
 
     /**
      * Set the active locale.
      */
-     setActiveLocale(locale) {
-      this.activeLocale = locale
+    setActiveLocale(locale) {
+      this.activeLocale = locale;
 
-      Nova.$emit('targomaan.locale', locale)
-    }
-  }, 
+      Nova.$emit("targomaan.locale", locale);
+    },
+  },
 
   computed: {
     availableLocales() {
@@ -41,8 +43,10 @@ export default {
     },
 
     shouldDisplayLocales() {
-      return Object.keys(this.field.locales).length > 1 && this.field.displayLocales
-    }
+      return (
+        Object.keys(this.field.locales).length > 1 && this.field.displayLocales
+      );
+    },
   },
 };
 </script>

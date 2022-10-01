@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <span>{{ fieldValue }}</span>
 </template>
 
 <script>
@@ -7,12 +7,9 @@ export default {
   props: ['resourceName', 'field'],
 
   computed: {
-    /**
-     * Determine if the field has a value other than null.
-     */
-    hasValue() {
-      return this.field.value !== null
+    fieldValue() {
+      return this.field.displayedAs || this.field.value
     },
-  },
-};
+  }
+}
 </script>

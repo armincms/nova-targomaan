@@ -1,63 +1,65 @@
 <template>
-  <div>
-    <div class="flex border-b border-40 -mx-6 px-6"> 
-      <div class="flex -mx-3">        
-        <h5 
-          v-for="(language, locale) in availableLocales" 
-          class="remove-last-margin-bottom text-center cursor-pointer p-3 text-70" 
-          :class="{'text-info': locale == activeLocale}"
-          @click="setActiveLocale(locale)"
-        >{{
-          language
-        }}</h5>
-      </div>
-    </div>  
-
-    <component 
+  <div class="divide-y divide-gray-100 dark:divide-gray-700">
+    <div class="flex -mx-6" v-if="shouldDisplayLocales">
+      <h5
+        v-for="(language, locale) in availableLocales"
+        :key="field.attribute + '-' + locale"
+        class="remove-last-margin-bottom text-center cursor-pointer px-6 py-1 font-semibold uppercase"
+        @click="setActiveLocale(locale)"
+        :class="{
+          'text-red-600': locale == activeLocale,
+          'text-gray-400 dark:text-gray-300': locale != activeLocale,
+        }"
+      >
+        {{ language }}
+      </h5>
+    </div>
+    <component
+      v-for="(field, index) in field.fields"
       :key="index"
-      v-for="(field, index) in fields"
-      v-if="field.locale == activeLocale"
+      :index="index"
       :is="resolveComponentName(field)"
       :resource-name="resourceName"
       :resource-id="resourceId"
       :resource="resource"
-      :field="field" 
-      :class="{'remove-bottom-border': removeBottomBorder(index, field.locale)}"
-    /> 
-  </div>      
+      :field="field"
+      @actionExecuted="actionExecuted"
+    />
+  </div>
 </template>
 
 <script>
-import HandleActiveLocale from './HandleActiveLocale.vue'
-import HandleToolbar from './HandleToolbar.vue'
-
+import HandleActiveLocale from "./HandleActiveLocale.vue";
+import HandleToolbar from "./HandleToolbar.vue";
 export default {
-    mixins: [HandleActiveLocale, HandleToolbar],
-    props: ['resource', 'resourceName', 'resourceId', 'field'],  
+  mixins: [HandleActiveLocale, HandleToolbar],
+  props: ["index", "resource", "resourceName", "resourceId", "field"],
 
-    methods: { 
-      /**
-       * Resolve the component name.
-       */
-      resolveComponentName(field) {
-        return field.prefixComponent
-          ? 'detail-' + field.component
-          : field.component
-      }, 
-
-      removeBottomBorder(index) {
-        if (index < this.fields.length - 1) {
-          return false;
-        } 
-
-        return this.$el.classList.contains('remove-bottom-border');
-      }
+  methods: {
+    /**
+     * Resolve the component name.
+     */
+    resolveComponentName(field) {
+      return field.prefixComponent
+        ? "detail-" + field.component
+        : field.component;
     },
 
-    computed: {
-      fields() {
-        return this.field.fields.filter(field => field.locale == this.activeLocale)
+    removeBottomBorder(index) {
+      if (index < this.fields.length - 1) {
+        return false;
       }
-    }
+
+      return this.$el.classList.contains("remove-bottom-border");
+    },
+  },
+
+  computed: {
+    fields() {
+      return this.field.fields.filter(
+        (field) => field.locale == this.activeLocale
+      );
+    },
+  },
 };
 </script>

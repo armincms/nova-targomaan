@@ -3,13 +3,13 @@
 namespace Armincms\Fields;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Downloadable; 
-use Laravel\Nova\Fields\Field; 
-use Laravel\Nova\Fields\FieldCollection; 
-use Laravel\Nova\Http\Requests\NovaRequest; 
+use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\FieldCollection;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use PhpParser\ErrorHandler\Collecting;
 
-class Targomaan extends Field implements Downloadable
-{     
+class Targomaan extends Field
+{
     /**
      * The panel's component.
      *
@@ -45,14 +45,14 @@ class Targomaan extends Field implements Downloadable
      * @return void
      */
     public function __construct(array $fields = [], array $locales = [])
-    {   
+    {
         $this->displayLocales();
         $this->withActiveLocale(app()->getLocale());
         $this->withLocales($locales ?: $this->availableLocales());
         $this->fields = $this->prepareFields($fields);
 
         parent::__construct($this->getAttribute());
-    }  
+    }
 
     /**
      * Get the specific attribute for the targomaan field.
@@ -60,7 +60,7 @@ class Targomaan extends Field implements Downloadable
      * @return string
      */
     private function getAttribute()
-    { 
+    {
         return md5($this->fields()->map->attribute->implode('-'));
     }
 
@@ -94,10 +94,10 @@ class Targomaan extends Field implements Downloadable
      * @return $this          
      */
     public function withFields(array $fields)
-    { 
+    {
         $this->fields = $fields;
 
-        return $this; 
+        return $this;
     }
 
     /**
@@ -107,10 +107,10 @@ class Targomaan extends Field implements Downloadable
      * @return $this          
      */
     public function withDelimiter(string $delimiter)
-    { 
+    {
         $this->delimiter = $delimiter;
 
-        return $this; 
+        return $this;
     }
 
     /**
@@ -140,7 +140,7 @@ class Targomaan extends Field implements Downloadable
      * @return array
      */
     protected function fields()
-    {  
+    {
         return FieldCollection::make($this->fields);
     }
 
@@ -151,14 +151,14 @@ class Targomaan extends Field implements Downloadable
      * @return array        
      */
     protected function prepareFields(array $fields)
-    { 
+    {
         $locales = (array) data_get($this->meta(), 'locales');
 
-        return collect($locales)->flatMap(function($name, $locale) use ($fields) {
-            return collect($fields)->map(function($field) use ($locale) {
+        return collect($locales)->flatMap(function ($name, $locale) use ($fields) {
+            return collect($fields)->map(function ($field) use ($locale) {
                 return $this->cloneFieldForLocale($field, $locale);
             });
-        });   
+        });
     }
 
     /**
@@ -169,7 +169,7 @@ class Targomaan extends Field implements Downloadable
      */
     public function findFieldByAttribute($attribute)
     {
-        return $this->fields()->first(function($field) use ($attribute) {
+        return $this->fields()->first(function ($field) use ($attribute) {
             return isset($field->attribute) && $field->attribute == $attribute;
         });
     }
@@ -184,11 +184,11 @@ class Targomaan extends Field implements Downloadable
     protected function cloneFieldForLocale($field, $locale)
     {
         $field = clone $field;
-        $field->attribute = $field->attribute.$this->delimiter.$locale; 
+        $field->attribute = $field->attribute . $this->delimiter . $locale;
         $field->withMeta(compact('locale'));
 
         return $field;
-    } 
+    }
 
     /**
      * Check for showing when updating.
@@ -200,12 +200,12 @@ class Targomaan extends Field implements Downloadable
     public function isShownOnUpdate(NovaRequest $request, $resource): bool
     {
         $this->fields = $this->fields()
-                             ->filter->isShownOnUpdate($request, $resource)
-                             ->values()
-                             ->all();
+            ->filter->isShownOnUpdate($request, $resource)
+            ->values()
+            ->all();
 
         return $this->fields()->isNotEmpty();
-    } 
+    }
 
     /**
      * Check showing on detail.
@@ -217,9 +217,9 @@ class Targomaan extends Field implements Downloadable
     public function isShownOnDetail(NovaRequest $request, $resource): bool
     {
         $this->fields = $this->fields()
-                             ->filter->isShownOnDetail($request, $resource)
-                             ->values()
-                             ->all();
+            ->filter->isShownOnDetail($request, $resource)
+            ->values()
+            ->all();
 
         return $this->fields()->isNotEmpty();
     }
@@ -233,9 +233,9 @@ class Targomaan extends Field implements Downloadable
     public function isShownOnCreation(NovaRequest $request): bool
     {
         $this->fields = $this->fields()
-                             ->filter->isShownOnCreation($request)
-                             ->values()
-                             ->all();
+            ->filter->isShownOnCreation($request)
+            ->values()
+            ->all();
 
         return $this->fields()->isNotEmpty();
     }
@@ -247,7 +247,7 @@ class Targomaan extends Field implements Downloadable
      * @return bool
      */
     public function authorize(Request $request)
-    { 
+    {
         $this->fields = $this->fields()->authorized($request)->all();
 
         return $this;
@@ -261,7 +261,7 @@ class Targomaan extends Field implements Downloadable
      * @return void
      */
     public function resolveForDisplay($resource, $attribute = null)
-    { 
+    {
         $this->fields()->each->resolveForDisplay($resource, $attribute);
     }
 
@@ -299,7 +299,7 @@ class Targomaan extends Field implements Downloadable
     {
         $callbacks = $this->fields()->map->fill($request, $model)->filter();
 
-        return function() use ($callbacks) {
+        return function () use ($callbacks) {
             return $callbacks->each->__invoke();
         };
     }
@@ -315,7 +315,7 @@ class Targomaan extends Field implements Downloadable
     {
         $callbacks = $this->fields()->map->fillForAction($request, $model)->filter();
 
-        return function() use ($callbacks) {
+        return function () use ($callbacks) {
             return $callbacks->each->__invoke();
         };
     }
@@ -329,9 +329,9 @@ class Targomaan extends Field implements Downloadable
     public function getRules(NovaRequest $request)
     {
         return $this->fields()
-                    ->flatMap->getRules($request)
-                    ->merge(parent::getRules($request))
-                    ->all();
+            ->flatMap->getRules($request)
+            ->merge(parent::getRules($request))
+            ->all();
     }
 
     /**
@@ -343,10 +343,10 @@ class Targomaan extends Field implements Downloadable
     public function getCreationRules(NovaRequest $request)
     {
         return $this->fields()
-                    ->flatMap->getCreationRules($request)
-                    ->merge(parent::getCreationRules($request))
-                    ->all();
-    } 
+            ->flatMap->getCreationRules($request)
+            ->merge(parent::getCreationRules($request))
+            ->all();
+    }
 
     /**
      * Get the update rules for this field.
@@ -357,17 +357,17 @@ class Targomaan extends Field implements Downloadable
     public function getUpdateRules(NovaRequest $request)
     {
         return $this->fields()
-                    ->flatMap->getUpdateRules($request)
-                    ->merge(parent::getUpdateRules($request))
-                    ->all();
-    } 
+            ->flatMap->getUpdateRules($request)
+            ->merge(parent::getUpdateRules($request))
+            ->all();
+    }
 
     /**
      * Prepare the field for JSON serialization.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return array_merge(parent::jsonSerialize(), [
             'fields' => $this->fields(),
